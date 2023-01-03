@@ -38,7 +38,7 @@ public class DbLoader implements ApplicationRunner {
 
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-            userRepository.save(User.builder().username("root").password(passwordEncoder.encode("root")).roles(List.of(roleRepository.findByName(ERole.ROLE_USER), roleRepository.findByName(ERole.ROLE_ADMIN))).build());
+            userRepository.save(User.builder().username("root").password(passwordEncoder.encode("root")).roles(List.of(roleRepository.findByName(ERole.ROLE_USER), roleRepository.findByName(ERole.ROLE_ADMIN), roleRepository.findByName(ERole.ROLE_MANAGER))).build());
             userRepository.save(User.builder().username("user").password(passwordEncoder.encode("user")).roles(List.of(roleRepository.findByName(ERole.ROLE_USER))).build());
             userRepository.save(User.builder().username("admin").password(passwordEncoder.encode("admin")).roles(List.of(roleRepository.findByName(ERole.ROLE_ADMIN))).build());
 

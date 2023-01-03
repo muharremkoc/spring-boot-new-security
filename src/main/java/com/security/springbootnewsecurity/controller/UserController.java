@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
@@ -29,39 +30,39 @@ public class UserController {
 
     @GetMapping(value = "/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')")
     public User findAllUsers(@PathVariable int userId) throws NotFoundException {
         return userService.findUserById(userId);
     }
     @PostMapping(value = "/user")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public User saveUser(@RequestBody @Valid UserSaveRequest userSaveRequest){
         return userService.saveUser(userSaveRequest);
     }
 
     @PutMapping(value = "/user/{userId}/role/add")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER','ROLE_ADMIN')")
     public User addRole(@PathVariable int userId, @RequestParam ERole eRole) throws NotFoundException {
         return userService.addRole(userId, eRole);
     }
 
     @DeleteMapping(value = "/user/{userId}/role/remove")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_MANAGER','ROLE_ADMIN')")
     public User removeRole(@PathVariable int userId, @RequestParam ERole eRole) throws NotFoundException {
         return userService.removeRole(userId, eRole);
     }
 
     @GetMapping(value = "/user/search")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_USER','ROLE_MANAGER')")
     public List<User> findUserByNameContaining(@RequestParam String name){
         return userService.findByNameContaining(name);
     }
 
     @DeleteMapping(value = "/user/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public User deleteUserById(@PathVariable int userId) throws NotFoundException {
         return userService.deleteUserById(userId);
     }
